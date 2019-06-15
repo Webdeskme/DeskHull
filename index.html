@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>DeskHull</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="Plugins/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+	<h1>DeskHull</h1>
+	<p>Server is running on port: <b><a href="127.0.0.1:7070">7070</a></b></p>
+	<hr>
+	<div class="container">	
+	<div class="form-group">
+		<label for="usr">UserName:</label>
+		<input type="text" class="form-control" id="usr" placeholder="UserName">
+	</div>
+	<div class="form-group">
+		<label for="pwd">Password:</label>
+		<input type="password" class="form-control" id="pwd" placeholder="Password">
+	</div>
+	<button id="resset" class="form-control btn btn-success">Resset</button> 
+	</div>
+	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+		<script src="Plugins/jquery.min.js"></script>
+		<script src="Plugins/popper.min.js"></script>
+		<script src="Plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script src="index.js"></script>
+		<script src="server.js"></script>
+	<script>if (window.module) module = window.module;</script>
+</body>
+</html> 
