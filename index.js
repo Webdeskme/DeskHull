@@ -16,6 +16,10 @@ var dh_apps = dh_homedir + '/Documents/DeskHull/apps/';
 if (!fs.existsSync(dh_apps)) {
         fs.mkdirSync(dh_apps);
 }
+var dh_files = dh_homedir + '/Documents/DeskHull/files/';
+if (!fs.existsSync(dh_files)) {
+        fs.mkdirSync(dh_files);
+}
 var dh_db = dh_homedir + '/Documents/DeskHull/db/';
 if (!fs.existsSync(dh_db)) {
         fs.mkdirSync(dh_db);
@@ -50,7 +54,23 @@ for (i = 0; i < files.length; i++) {
 con += '</ul><script src="../Plugins/jquery.min.js"></script><script src="../dh_api.js"></script></body></html>';
 fs.writeFile(dh_apps + 'index.html', con, function (err) {
   if (err) throw err;
-  console.log('Saved!');
+  console.log('Saved Site Map!');
+});
+
+// site map Files
+
+var con = '<!DOCTYPE html><html><title>File Map</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><body><h3>File Map:</h3><ul>';
+files = fs.readdirSync(dh_files);
+for (i = 0; i < files.length; i++) {
+    if (fs.existsSync(dh_files + files[i])) {
+     // file = fs.readFileSync(dh_apps + files[i]);
+      con += '<li><a href="' + encodeURIComponent(files[i]) + '" target="_blank">' + files[i] +'</a></li>';
+    }
+}
+con += '</ul></body></html>';
+fs.writeFile(dh_files + 'index.html', con, function (err) {
+  if (err) throw err;
+  console.log('Saved File Map!');
 });
 
 // Save Button

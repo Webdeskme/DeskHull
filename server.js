@@ -7,13 +7,14 @@ var app = express();
 const dh_homedir = require('os').homedir();
 var dh_www = dh_homedir + '/Documents/DeskHull/www/';
 var dh_apps = dh_homedir + '/Documents/DeskHull/apps/';
+var dh_files = dh_homedir + '/Documents/DeskHull/files/';
 var dh_db = dh_homedir + '/Documents/DeskHull/db/';
 var dh_set = dh_homedir + '/Documents/DeskHull/db/dh_set/';
 //app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded({extended: true})); // to support URL-encoded bodies
 // on the request to root (localhost:7070/)
 app.use("/", express.static(dh_www));
-var dh_protect = function(req, res, next) {
+/*var dh_protect = function(req, res, next) {
 	if (typeof(Storage) !== "undefined") {
 		var tkey = sessionStorage.getItem("dh_key");
 		var cred = fs.readFileSync(dh_set + "admin.json");
@@ -29,8 +30,9 @@ var dh_protect = function(req, res, next) {
   	console.log('Storage not enabled in your browser!');
 	}
     next();
-};
+};*/
 app.use("/apps", express.static(dh_apps));
+app.use("/files", express.static(dh_files));
 app.post('/dh_server.html', function (req, res) {
 	if(req.body.type = "login"){
 	var name = req.body.name;
@@ -63,46 +65,53 @@ app.post('/dh_server.html', function (req, res) {
 	}
 }
 else{
+
 	var key = req.body.key;
+
+		var cred = fs.readFileSync(dh_set + "admin.json");
+		cred = JSON.parse(cred);
+		if(key === cred.key){
 	var db = req.body.db;
-if(req.body.type = "ntable"){
 	var table = req.body.table;
+if(req.body.type = "insert"){
+	var row = req.body.row;
 	var col = req.body.col;
-	if (!fs.existsSync(dh_db + db)) {
-	        fs.mkdirSync(dh_db + db);
+	var data = req.body.data;
+	if (fs.existsSync(dh_db + db + "/" + table + ".js")){
+		var obj = readFileSync(dh_db + db + "/" + table + ".js");
+		obj = JSON.parse(obj);
+		obj[row][col] = data;
+		obj = JSON.stringify(obj);
+		fs.writeFileSync(dh_db + db + "/" + table + ".js", obj);
+	}
+	else{
+		res.send("error: no table exists");
 	}
 }
-
-else if(req.body.type = "ddb"){
-
-}
-
-else if (req.body.type = "dtable"){
-
-}
-
-else if (req.body.type = "nrow"){
-
-}
-
-else if (req.body.type = "urow"){
-
-}
-
 else if (req.body.type = "drow"){
-
+	var row = req.body.row;
+	if (fs.existsSync(dh_db + db + "/" + table + ".js")){
+		var obj = readFileSync(dh_db + db + "/" + table + ".js");
+		 obj = JSON.parse(obj);
+		 delete(obj[row]);
+		 obj = JSON.stringify(obj);
+		 fs.writeFileSync(dh_db + db + "/" + table + ".js", obj);
+		 res.send("deleted");
+	}
+	else{
+		res.send("error: no table exists");
+	}
 }
-
-else if (req.body.type = "ucell"){
-
-}
-
 else if (req.body.type = "vtable"){
-
+	if (fs.existsSync(dh_db + db + "/" + table + ".js")){
+		var data = readFileSync(dh_db + db + "/" + table + ".js");
+		res.send(data);
+	}
 }
-
-else if (req.body.type = "vrow"){
-
+}
+else{
+	console.log("Bad key");
+	res.send("Bad Key")
 }
 }
 });
